@@ -11,9 +11,11 @@
 需要 Node.js 22+、FFmpeg/FFprobe，以及可用的 HyperFrames CLI。
 
 ```bash
-npm install -g github:xulei19771217/digital-human-video-agent
+npm install -g --install-links=true github:xulei19771217/digital-human-video-agent
 video-agent --help
 ```
+
+`--install-links=true` 会让 npm 复制 GitHub 包，而不是链接到安装后会被清理的临时 Git 目录；在 Windows 与 npm 11 上必须保留。
 
 ## 初始化
 
