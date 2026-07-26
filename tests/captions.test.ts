@@ -9,6 +9,7 @@ import {
   parseSrt,
   validateCaptionCues,
 } from "../src/providers/captions.js";
+import { npxInvocation } from "../src/util/process.js";
 
 describe("CaptionProvider", () => {
   it("parses UTF-8 SRT cues structurally", () => {
@@ -61,7 +62,7 @@ describe("CaptionProvider", () => {
     );
 
     expect(run).toHaveBeenCalledOnce();
-    expect(run.mock.calls[0]![1].slice(1)).toEqual([
+    const expected = npxInvocation([
       "--yes",
       "hyperframes@0.7.71",
       "transcribe",
@@ -71,5 +72,6 @@ describe("CaptionProvider", () => {
       "--to=srt",
       `--output=${outputPath}`,
     ]);
+    expect(run).toHaveBeenCalledWith(expected.command, expected.args);
   });
 });
