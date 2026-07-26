@@ -1,0 +1,7 @@
+{
+  "name": "digital-human-portrait",
+  "width": 720,
+  "height": 1280,
+  "fps": 30,
+  "entry": "index.html"
+}

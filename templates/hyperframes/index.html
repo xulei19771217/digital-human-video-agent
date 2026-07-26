@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=720, height=1280" />
+    <title>Digital Human Portrait</title>
+    <style>
+      @font-face {
+        font-family: "Microsoft YaHei";
+        src:
+          url("./fonts/LXGWWenKaiTC-400-latin.woff2") format("woff2"),
+          local("Microsoft YaHei");
+        font-weight: 400;
+        font-display: block;
+      }
+      @font-face {
+        font-family: Inter;
+        src: url("./fonts/Inter-400-latin.woff2") format("woff2");
+        font-weight: 400;
+        font-display: block;
+      }
+      @font-face {
+        font-family: Inter;
+        src: url("./fonts/Inter-700-latin.woff2") format("woff2");
+        font-weight: 700 900;
+        font-display: block;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 720px;
+        height: 1280px;
+        margin: 0;
+        overflow: hidden;
+        background: #11100e;
+        color: #ffffff;
+        font-family: Inter, "Microsoft YaHei", sans-serif;
+      }
+      #root {
+        position: relative;
+        width: 720px;
+        height: 1280px;
+        overflow: hidden;
+      }
+      .backdrop {
+        position: absolute;
+        inset: 0;
+        background: #11100e;
+      }
+      #avatar-wrap {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        overflow: hidden;
+      }
+      #avatar-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .clip {
+        position: absolute;
+      }
+      .broll {
+        z-index: 3;
+        top: 166px;
+        right: 30px;
+        width: 248px;
+        height: 174px;
+        border: 2px solid rgba(255, 255, 255, 0.72);
+        border-radius: 8px;
+        object-fit: cover;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      .hook {
+        z-index: 5;
+        top: 58px;
+        left: 32px;
+        width: 656px;
+        min-height: 132px;
+        padding: 20px 24px;
+        background: rgba(17, 16, 14, 0.82);
+        border-left: 8px solid #f3c64e;
+      }
+      .hook-label {
+        margin: 0 0 8px;
+        color: #f3c64e;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .hook-title {
+        margin: 0;
+        font-size: 42px;
+        line-height: 1.12;
+        font-weight: 800;
+      }
+      .fact-card {
+        z-index: 5;
+        top: 742px;
+        left: 352px;
+        width: 336px;
+        min-height: 170px;
+        padding: 22px;
+        background: rgba(17, 16, 14, 0.86);
+        border-top: 5px solid #55b7a5;
+      }
+      .fact-index {
+        color: #55b7a5;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .fact-text {
+        margin: 10px 0 0;
+        font-size: 30px;
+        line-height: 1.25;
+        font-weight: 700;
+      }
+      .caption {
+        z-index: 7;
+        left: 48px;
+        bottom: 86px;
+        width: 624px;
+        min-height: 84px;
+        display: grid;
+        place-items: center;
+        padding: 14px 20px;
+        background: rgba(0, 0, 0, 0.78);
+        border-radius: 6px;
+        text-align: center;
+        font-size: 34px;
+        line-height: 1.28;
+        font-weight: 700;
+      }
+      #progress-track {
+        position: absolute;
+        z-index: 8;
+        bottom: 0;
+        left: 0;
+        width: 720px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.24);
+      }
+      #progress {
+        display: block;
+        width: 720px;
+        height: 8px;
+        background: #f3c64e;
+        transform-origin: left center;
+      }
+    </style>
+  </head>
+  <body>
+    <main
+      id="root"
+      data-composition-id="digital-human-portrait"
+      data-start="0"
+      data-duration="__DURATION__"
+      data-fps="30"
+      data-width="720"
+      data-height="1280"
+    >
+      <div class="backdrop"></div>
+      <div id="avatar-wrap">
+        <video
+          id="avatar-video"
+          src="./assets/avatar.mp4"
+          data-start="0"
+          data-duration="__DURATION__"
+          data-track-index="1"
+          muted
+          playsinline
+        ></video>
+      </div>
+      <audio
+        id="voice-audio"
+        src="./assets/voice.mp3"
+        data-start="0"
+        data-duration="__DURATION__"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+      __MEDIA_CLIPS__
+      __HOOK_CLIP__
+      __FACT_CLIPS__
+      __CAPTION_CLIPS__
+      <div id="progress-track">
+        <span id="progress"></span>
+      </div>
+    </main>
+    <script src="./vendor/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const timeline = window.gsap.timeline({ paused: true });
+      timeline.fromTo(
+        "#avatar-wrap",
+        { scale: 1 },
+        { scale: 1.018, duration: __DURATION__, ease: "none" },
+        0,
+      );
+      timeline.fromTo(
+        "#progress",
+        { scaleX: 0 },
+        { scaleX: 1, duration: __DURATION__, ease: "none" },
+        0,
+      );
+      __ANIMATIONS__
+      window.__timelines["digital-human-portrait"] = timeline;
+    </script>
+  </body>
+</html>
