@@ -1,0 +1,47 @@
+{
+  "name": "digital-human-video-agent",
+  "version": "0.1.0",
+  "description": "Turn a script into a digital-human video publishing pack",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "video-agent": "dist/src/cli.js"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "tsx src/cli.ts",
+    "smoke:live": "tsx scripts/live-smoke.ts"
+  },
+  "keywords": [
+    "fish-audio",
+    "heygen",
+    "hyperframes",
+    "video-agent"
+  ],
+  "author": "xulei19771217",
+  "dependencies": {
+    "commander": "^15.0.0",
+    "dotenv": "^17.4.2",
+    "gray-matter": "^4.0.3",
+    "open": "^11.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
