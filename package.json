@@ -8,7 +8,8 @@
     "video-agent": "dist/src/cli.js"
   },
   "files": [
-    "dist",
+    "dist/src",
+    "dist/scripts",
     "templates",
     "skills",
     "README.md",
@@ -18,10 +19,11 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "start": "tsx src/cli.ts",
+    "prepare": "npm run build",
     "smoke:live": "tsx scripts/live-smoke.ts"
   },
   "keywords": [

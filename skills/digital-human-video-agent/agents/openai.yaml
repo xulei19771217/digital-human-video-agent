@@ -1,0 +1,4 @@
+interface:
+  display_name: "Digital Human Video Agent"
+  short_description: "Run a resumable script-to-video publishing workflow"
+  default_prompt: "Use $digital-human-video-agent to turn this Markdown script into a reviewed video publishing pack."

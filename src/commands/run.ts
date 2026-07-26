@@ -37,6 +37,7 @@ import {
   type PublishPackInput,
   type ScriptDocument,
 } from "../providers/publish-pack.js";
+import { redact } from "../security/redact.js";
 import { runProcess } from "../util/process.js";
 
 export const ExitCode = {
@@ -296,7 +297,7 @@ async function executeJob(
   await writeFile(
     reportPath,
     `${JSON.stringify(
-      {
+      redact({
         schemaVersion: 1,
         jobId: job.id,
         status: "completed",
@@ -307,7 +308,7 @@ async function executeJob(
         provenance: mediaManifest(job).items,
         startedAt: job.createdAt,
         completedAt: new Date().toISOString(),
-      },
+      }),
       null,
       2,
     )}\n`,
