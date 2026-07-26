@@ -35,6 +35,13 @@ const ProfileSnapshotSchema = z.object({
   fps: z.literal(30),
 });
 
+const JobParametersSchema = z.object({
+  speed: z.number().min(0.5).max(2),
+  mediaDir: z.string().optional(),
+  pexelsEnabled: z.boolean(),
+  mock: z.boolean(),
+});
+
 const JobStagesSchema = z.object({
   voice: StageRecordSchema,
   avatar: StageRecordSchema,
@@ -52,6 +59,7 @@ export const JobSchema = z.object({
   scriptPath: z.string(),
   scriptHash: z.string(),
   profile: ProfileSnapshotSchema,
+  parameters: JobParametersSchema,
   stages: JobStagesSchema,
 });
 

@@ -12,6 +12,13 @@ import {
   createDefaultSetupDependencies,
   runSetup,
 } from "./commands/setup.js";
+import {
+  CliError,
+  ExitCode,
+  resumeVideoJob,
+  runVideoJob,
+} from "./commands/run.js";
+import { runStatus } from "./commands/status.js";
 import { loadCredentials } from "./config/credentials.js";
 import { currentAppPaths } from "./config/paths.js";
 
@@ -25,6 +32,7 @@ async function currentCredentials() {
 }
 
 export async function main(argv: string[]): Promise<number> {
+  let commandExitCode: number = ExitCode.ok;
   const program = new Command()
     .name("video-agent")
     .description("Turn a script into a digital-human video publishing pack")
@@ -61,20 +69,72 @@ export async function main(argv: string[]): Promise<number> {
           );
         }
       }
-      if (!report.ready) process.exitCode = 10;
+      if (!report.ready) commandExitCode = ExitCode.notConfigured;
     });
-  program.command("run").argument("<script>", "Markdown script path");
-  program.command("status").argument("[job-id]");
-  program.command("resume").argument("<job-id>");
+  program
+    .command("run")
+    .argument("<script>", "Markdown script path")
+    .option("--voice <voice-id>", "Override the default Fish Audio voice")
+    .option("--avatar <avatar-id>", "Override the default HeyGen avatar")
+    .option(
+      "--speed <number>",
+      "Narration speed from 0.5 through 2.0",
+      Number,
+    )
+    .option("--media-dir <path>", "Directory containing local B-roll")
+    .option("--output-dir <path>", "Runs directory")
+    .option("--mock", "Use local mock voice and avatar providers")
+    .action(
+      async (
+        script: string,
+        options: {
+          voice?: string;
+          avatar?: string;
+          speed?: number;
+          mediaDir?: string;
+          outputDir?: string;
+          mock?: boolean;
+        },
+      ) => {
+        const result = await runVideoJob(script, options);
+        process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      },
+    );
+  program
+    .command("status")
+    .argument("[job-id]")
+    .option("--runs-dir <path>", "Override the configured runs directory")
+    .action(async (jobId: string | undefined, options: { runsDir?: string }) => {
+      process.stdout.write(
+        `${JSON.stringify(await runStatus(jobId, options.runsDir), null, 2)}\n`,
+      );
+    });
+  program
+    .command("resume")
+    .argument("<job-id>")
+    .option("--runs-dir <path>", "Override the configured runs directory")
+    .action(async (jobId: string, options: { runsDir?: string }) => {
+      const result = await resumeVideoJob(jobId, options.runsDir);
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    });
 
   try {
     await program.parseAsync(argv);
-    return 0;
+    return commandExitCode;
   } catch (error) {
     if (error instanceof CommanderError) {
       return error.exitCode;
     }
-    throw error;
+    const message = (error as Error).message;
+    process.stderr.write(`${message}\n`);
+    if (error instanceof CliError) return error.exitCode;
+    if (message.includes("manual recovery")) {
+      return ExitCode.unknownPaidOutcome;
+    }
+    if (message.includes("HyperFrames") || message.includes("render")) {
+      return ExitCode.renderFailure;
+    }
+    return ExitCode.providerFailure;
   }
 }
 

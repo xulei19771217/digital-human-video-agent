@@ -113,6 +113,8 @@ async function defaultCaptureCover(
     String(atSeconds),
     "-i",
     masterPath,
+    "-vf",
+    "drawbox=x=0:y=1000:w=720:h=280:color=0x11100e:t=fill",
     "-frames:v",
     "1",
     "-y",
@@ -251,7 +253,7 @@ export class HyperFramesProvider
       durationSeconds: input.durationSeconds,
       hook: input.hook,
       facts: input.facts,
-      templateVersion: 1,
+      templateVersion: 2,
       hyperframes: "0.7.71",
     });
   }

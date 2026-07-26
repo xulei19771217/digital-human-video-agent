@@ -57,6 +57,11 @@ export class JobStore {
     scriptPath: string,
     scriptHash: string,
     profile: Job["profile"],
+    parameters: Job["parameters"] = {
+      speed: 1,
+      pexelsEnabled: false,
+      mock: false,
+    },
   ): Promise<Job> {
     const now = new Date();
     const paid = new Set<StageName>(["voice", "avatar"]);
@@ -71,6 +76,7 @@ export class JobStore {
       scriptPath,
       scriptHash,
       profile,
+      parameters,
       stages,
     });
     await this.save(job);

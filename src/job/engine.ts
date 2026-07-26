@@ -31,7 +31,7 @@ function resetStage(stage: StageRecord): StageRecord {
   };
 }
 
-function invalidateFrom(job: Job, first: StageName): Job {
+export function invalidateFromStage(job: Job, first: StageName): Job {
   const copy = structuredClone(job);
   const firstIndex = STAGE_ORDER.indexOf(first);
   for (const name of STAGE_ORDER.slice(firstIndex)) {
@@ -44,7 +44,7 @@ export function invalidateForChange(
   job: Job,
   change: "script" | "cover",
 ): Job {
-  return invalidateFrom(job, change === "script" ? "voice" : "package");
+  return invalidateFromStage(job, change === "script" ? "voice" : "package");
 }
 
 function completedRecord(
@@ -96,7 +96,7 @@ export class JobEngine {
       return job;
     }
     if (current.status === "completed" && current.inputHash !== inputHash) {
-      job = invalidateFrom(job, provider.stage);
+      job = invalidateFromStage(job, provider.stage);
       current = job.stages[provider.stage];
     }
 
